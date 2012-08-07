@@ -9,12 +9,11 @@ namespace wepayASPNET.WePaySDK
 {
     public static class WePayConfig
     {
+        public static string RequestUri { get; set; }
+
         // staging credentials...
         public static string accessToken = "a47e76ee76fb4b1df6883804c6290a8d303ae19bd14902040f4b82e1f3ea849b";
         public static string accountId = "478442";
-        public static string callbackUrl = @"http://localhost:80/";
-        public static string redirectUrl = @"http://localhost:80/";
-
         public static string endpoint(bool prod)
         {
             if(prod) return @"https://www.wepayapi.com/v2/";
@@ -24,7 +23,7 @@ namespace wepayASPNET.WePaySDK
 
     public class Checkout
     {
-
+        public string finishUrl = WePayConfig.RequestUri + @"/Home/CheckoutFinish";
         public string GetCheckoutUri(string amount, string desc)
         {
             string checkoutUri = "";
@@ -36,7 +35,7 @@ namespace wepayASPNET.WePaySDK
                 type = "SERVICE",
                 amount = amount,
                 short_description = desc,
-                redirect_uri = WePayConfig.redirectUrl
+                redirect_uri = finishUrl
             };
 
             using (var client = new WebClient())

@@ -12,6 +12,10 @@ namespace wepayASPNET.Controllers
 {
     public class HomeController : Controller
     {
+        public HomeController()
+        {
+        }
+       
         public ActionResult Index()
         {
 
@@ -24,12 +28,22 @@ namespace wepayASPNET.Controllers
             return Content(state);
         }
 
-        public ActionResult CheckoutCreate()
+        public ActionResult CheckoutCreate(string amt)
         {
-            var uri = new Checkout().GetCheckoutUri("12.50", "test transaction.");
+            var hostUrl =this.HttpContext.Request.Url.Scheme+ "://" + this.ControllerContext.HttpContext.Request.Url.Authority;
+            WePaySDK.WePayConfig.RequestUri = hostUrl;
+            var uri = new Checkout().GetCheckoutUri(amt, "test transaction.");
             return Redirect(uri);
         }
 
+        public ActionResult CheckoutFinish(int checkout_id)
+        {
+            ViewBag.checkout_id = checkout_id;
+             var resp = new WePaySDK.Checkout().GetCheckoutStatus(checkout_id);
+             ViewBag.state = resp.state;
+             ViewBag.amount = resp.amount;
+            return View();
+        }
       
     }
 }
