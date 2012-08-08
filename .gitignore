@@ -1,0 +1,4 @@
+
+*.suo
+/WePayMVC/bin
+/WePayMVC/obj

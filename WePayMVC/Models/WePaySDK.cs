@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Net;
 using Newtonsoft.Json;
+using System.Configuration;
 
 namespace wepayASPNET.WePaySDK
 {
@@ -12,8 +13,8 @@ namespace wepayASPNET.WePaySDK
         public static string RequestUri { get; set; }
 
         // staging credentials...
-        public static string accessToken = "a47e76ee76fb4b1df6883804c6290a8d303ae19bd14902040f4b82e1f3ea849b";
-        public static string accountId = "478442";
+        public static string accessToken = ConfigurationManager.AppSettings["WepayAccessToken"];
+        public static string accountId = ConfigurationManager.AppSettings["WepayAccountId"];
         public static string endpoint(bool prod)
         {
             if(prod) return @"https://www.wepayapi.com/v2/";
@@ -92,7 +93,7 @@ namespace wepayASPNET.WePaySDK
         public string callback_uri { get; set; }
         public string redirect_uri { get; set; }
         public string payer_email_message { get; set; }
-        public string payee_email_message { get; set; } //preapproval_id
+        public string payee_email_message { get; set; } 
         public string preapproval_id { get; set; }
     }
 
