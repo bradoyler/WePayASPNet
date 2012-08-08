@@ -2,42 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Net;
 using Newtonsoft.Json;
-using System.Configuration;
+using System.Net;
 
-namespace wepayASPNET.WePaySDK
+namespace WePaySDK
 {
-    public static class WePayConfig
-    {
-        public static string RequestUri { get; set; }
-
-        // staging credentials...
-        public static string accessToken = ConfigurationManager.AppSettings["WepayAccessToken"];
-        public static string accountId = ConfigurationManager.AppSettings["WepayAccountId"];
-        public static string endpoint(bool prod)
-        {
-            if(prod) return @"https://www.wepayapi.com/v2/";
-            return @"https://stage.wepayapi.com/v2/";
-        }
-    }
-
     public class Checkout
     {
-        public string finishUrl = WePayConfig.RequestUri + @"/Home/CheckoutFinish";
-        public string GetCheckoutUri(string amount, string desc)
+        public string GetUri(CheckoutCreateRequest req)
         {
-            string checkoutUri = "";
-
-            var req = new CheckoutCreateRequest
-            {
-                account_id = WePayConfig.accountId,
-                mode = "regular",
-                type = "SERVICE",
-                amount = amount,
-                short_description = desc,
-                redirect_uri = finishUrl
-            };
+            string resultUri = "";
 
             using (var client = new WebClient())
             {
@@ -49,16 +23,15 @@ namespace wepayASPNET.WePaySDK
                 string uriString = WePayConfig.endpoint(false) + req.actionUrl;
                 var response = client.UploadString(new Uri(uriString), data);
                 Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
-                checkoutUri = values["checkout_uri"];
+                resultUri = values["checkout_uri"];
             }
-            return checkoutUri;
+            return resultUri;
         }
 
-        public CheckoutResponse GetCheckoutStatus(int checkout_id)
+        public CheckoutResponse GetStatus(int checkout_id)
         {
             CheckoutResponse chkResponse;
-            var req = new CheckoutRequest
-            {  checkout_id=checkout_id };
+            var req = new CheckoutRequest { checkout_id = checkout_id };
 
             using (var client = new WebClient())
             {
@@ -69,8 +42,8 @@ namespace wepayASPNET.WePaySDK
 
                 string uriString = WePayConfig.endpoint(false) + req.actionUrl;
                 var response = client.UploadString(new Uri(uriString), data);
-               chkResponse = JsonConvert.DeserializeObject<CheckoutResponse>(response);
-               
+                chkResponse = JsonConvert.DeserializeObject<CheckoutResponse>(response);
+
             }
             return chkResponse;
 
@@ -85,7 +58,7 @@ namespace wepayASPNET.WePaySDK
         public string account_id { get; set; }
         public string short_description { get; set; }
         public string type { get; set; }
-        public string amount { get; set; }
+        public decimal amount { get; set; }
         public string mode { get; set; }
 
         public string reference_id { get; set; }
@@ -93,14 +66,14 @@ namespace wepayASPNET.WePaySDK
         public string callback_uri { get; set; }
         public string redirect_uri { get; set; }
         public string payer_email_message { get; set; }
-        public string payee_email_message { get; set; } 
+        public string payee_email_message { get; set; }
         public string preapproval_id { get; set; }
     }
 
     public class CheckoutCreateResponse
     {
-       public string checkout_id { get; set; }
-       public string checkout_uri { get; set; }
+        public string checkout_id { get; set; }
+        public string checkout_uri { get; set; }
     }
 
     public class CheckoutRequest
@@ -118,7 +91,7 @@ namespace wepayASPNET.WePaySDK
         public string state { get; set; }
         public string short_description { get; set; }
         public string type { get; set; }
-        public string amount { get; set; }
+        public decimal amount { get; set; }
         public string fee { get; set; }
         public string gross { get; set; }
         public string reference_id { get; set; }
@@ -136,18 +109,8 @@ namespace wepayASPNET.WePaySDK
         public string require_shipping { get; set; }
         public string shipping_address { get; set; }
         public string tax { get; set; }
-        public string amount_refunded { get; set; }
+        public decimal amount_refunded { get; set; }
         public string create_time { get; set; }
     }
 
-    public static class ExtensionMethods
-    {
-        public static double JsonDate(this DateTime dt)
-        {
-            DateTime d1 = new DateTime(1970, 1, 1);
-            DateTime d2 = dt.ToUniversalTime();
-            TimeSpan ts = new TimeSpan(d2.Ticks - d1.Ticks);
-            return Math.Round(ts.TotalMilliseconds, 0);
-        }
-    }
 }

@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = ViewBag.CartType+" Finish";
+}
+
+<h2>@ViewBag.CartType Finished</h2>
+
+<h3 class="well">@ViewBag.CartType Id: @ViewBag.checkout_id
+<br />State: @ViewBag.state
+<br />Amount: @string.Format("{0:c}",ViewBag.amount)
+</h3>
