@@ -1,18 +1,17 @@
-Instructions
+Getting Started
 ============
+Read the API docs @ (https://stage.wepay.com/developer)
+Go to (https://stage.wepay.com) and setup a business account.
 
-
-Setup
+SDK\Examples Setup
 ------------
-Goto (https://stage.wepay.com) and setup a business account.
 Open Web.Config and add your AccessToken and AccountId to the AppSettings config section.
 
 
-Examples
-------------------
-* Create a check
+Examples coverage
+------------------------
+* Create a checkout
 
+* Get the checkout status
 
-API Docs
-----------------
-go read the docs @ (https://stage.wepay.com/developer)
+* more coming...
