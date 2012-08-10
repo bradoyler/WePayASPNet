@@ -9,45 +9,44 @@ namespace WePaySDK
 {
     public class Checkout
     {
-        public string GetUri(CheckoutCreateRequest req)
+        private WebClient client;
+      
+        public Checkout()
         {
-            string resultUri = "";
-
-            using (var client = new WebClient())
-            {
-                client.Headers.Add("Authorization", "Bearer " + WePayConfig.accessToken);
-                client.Headers.Add("Content-Type", "application/json");
-                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.60 Safari/537.1");
-                var data = JsonConvert.SerializeObject(req);
-
-                string uriString = WePayConfig.endpoint(false) + req.actionUrl;
-                var response = client.UploadString(new Uri(uriString), data);
-                Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
-                resultUri = values["checkout_uri"];
-            }
-            return resultUri;
+            client = new WebClient();
         }
 
-        public CheckoutResponse GetStatus(int checkout_id)
+        public CheckoutCreateResponse Process(CheckoutCreateRequest req)
         {
-            CheckoutResponse chkResponse;
+            CheckoutCreateResponse response;
+            try
+            {
+                response = new WePayClient().Post<CheckoutCreateRequest, CheckoutCreateResponse>(req, req.actionUrl);
+            }
+            catch
+            {
+                response = new CheckoutCreateResponse { checkout_id=0, checkout_uri="/error" };
+            }
+
+            return response;
+        }
+
+        public CheckoutResponse GetStatus(long checkout_id)
+        {
             var req = new CheckoutRequest { checkout_id = checkout_id };
-
-            using (var client = new WebClient())
+            CheckoutResponse response;
+            try
             {
-                client.Headers.Add("Authorization", "Bearer " + WePayConfig.accessToken);
-                client.Headers.Add("Content-Type", "application/json");
-                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.60 Safari/537.1");
-                var data = JsonConvert.SerializeObject(req);
-
-                string uriString = WePayConfig.endpoint(false) + req.actionUrl;
-                var response = client.UploadString(new Uri(uriString), data);
-                chkResponse = JsonConvert.DeserializeObject<CheckoutResponse>(response);
-
+                response = new WePayClient().Post<CheckoutRequest, CheckoutResponse>(req, req.actionUrl);
             }
-            return chkResponse;
+            catch
+            {
+                response = new CheckoutResponse { state = "error", amount = 0 };
+            }
 
+            return response;
         }
+       
     }
 
     public class CheckoutCreateRequest
@@ -55,7 +54,7 @@ namespace WePaySDK
         [JsonIgnore]
         public string actionUrl = @"checkout/create";
 
-        public string account_id { get; set; }
+        public int account_id { get; set; }
         public string short_description { get; set; }
         public string type { get; set; }
         public decimal amount { get; set; }
@@ -67,18 +66,18 @@ namespace WePaySDK
         public string redirect_uri { get; set; }
         public string payer_email_message { get; set; }
         public string payee_email_message { get; set; }
-        public string preapproval_id { get; set; }
+        public int preapproval_id { get; set; }
     }
 
     public class CheckoutCreateResponse
     {
-        public string checkout_id { get; set; }
+        public int checkout_id { get; set; }
         public string checkout_uri { get; set; }
     }
 
     public class CheckoutRequest
     {
-        public int checkout_id { get; set; }
+        public long checkout_id { get; set; }
 
         [JsonIgnore]
         public string actionUrl = @"checkout";
@@ -86,8 +85,8 @@ namespace WePaySDK
 
     public class CheckoutResponse
     {
-        public string checkout_id { get; set; }
-        public string account_id { get; set; }
+        public int checkout_id { get; set; }
+        public int account_id { get; set; }
         public string state { get; set; }
         public string short_description { get; set; }
         public string type { get; set; }

@@ -72,6 +72,8 @@
     </Compile>
     <Compile Include="lib\WePaySDK\Checkout.cs" />
     <Compile Include="lib\WePaySDK\Config.cs" />
+    <Compile Include="lib\WePaySDK\OAuth.cs" />
+    <Compile Include="lib\WePaySDK\User.cs" />
     <Compile Include="lib\WePaySDK\Preapproval.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -152,7 +154,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Finish.cshtml" />
+    <Content Include="Views\Home\Status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

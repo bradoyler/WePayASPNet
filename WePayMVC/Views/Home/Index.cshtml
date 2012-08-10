@@ -2,13 +2,30 @@
     ViewBag.Title = "Home Page";
 }
 
-<h2>EXAMPLES</h2>
+<h2>Examples</h2>
 
 <h3 class="well">#1 <a class="btn" href="@Url.Action("CheckoutCreate", new {amt="2.50" })">Create Checkout for $2.50 <i class="icon-shopping-cart"></i> </a> </h3>
 
 <h3 class="well">#2 <a class="btn" href="@Url.Action("PreapprovalCreate", new {amt=2.50 })">Create PreApproval for $2.50 <i class="icon-shopping-cart"></i> </a> </h3>
 
+<div class="well">
+<h3>#3 Process Preapproval</h3>
+<form action="/Home/ProcessPreapproval" method="POST">
+  <input id="preapproval_id" placeholder="Preapproval Id" type="text" name="preapproval_id" value="" />
+  <input id="amt" placeholder="enter amount" type="text" name="amt" value="" />
+  <input class="btn" id="submit" type="submit" value="submit" />
+</form>
+</div>
 
-<br />
-<h4>More examples coming...</h4>
+<h3 class="well">#4 <a class="btn" href="@Url.Action("GetUser")">Get User Info (by AccessToken) <i class="icon-user"></i> </a> </h3>
+
+<div class="well">
+<h3>#4 Get Checkout Status</h3>
+<form action="/Home/CheckoutStatus" method="GET">
+  <input id="checkout_id" placeholder="enter checkout Id" type="text" name="checkout_id" value="" />
+  <input class="btn" id="submit" type="submit" value="submit" />
+</form>
+</div>
+
+<h3 class="well">#5 <a class="btn" href="https://stage.wepay.com/v2/oauth2/authorize?client_id=@WePaySDK.WePayConfig.clientId&redirect_uri=@ViewBag.redirect_uri&scope=@WePaySDK.WePayConfig.authScope">Authorize a User <i class="icon-play"></i> </a> </h3>
 

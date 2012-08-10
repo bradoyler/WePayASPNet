@@ -11,42 +11,33 @@ namespace WePaySDK
     {      
         public string GetUri(PreapprovalCreateRequest req)
         {
-            string resultUri = "";
-
-            using (var client = new WebClient())
+            PreapprovalCreateResponse response;
+            try
             {
-                client.Headers.Add("Authorization", "Bearer " + WePayConfig.accessToken);
-                client.Headers.Add("Content-Type", "application/json");
-                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.60 Safari/537.1");
-                var data = JsonConvert.SerializeObject(req);
-
-                string uriString = WePayConfig.endpoint(false) + req.actionUrl;
-                var response = client.UploadString(new Uri(uriString), data);
-                Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
-                resultUri = values["preapproval_uri"];
+                response = new WePayClient().Post<PreapprovalCreateRequest, PreapprovalCreateResponse>(req, req.actionUrl);
             }
-            return resultUri;
+            catch
+            {
+                response = new PreapprovalCreateResponse { preapproval_uri = "/error" };
+            }
+
+            return response.preapproval_uri;
         }
 
         public PreapprovalResponse GetStatus(int preapproval_id)
         {
-            PreapprovalResponse objResponse;
             var req = new PreapprovalRequest { preapproval_id = preapproval_id };
-
-            using (var client = new WebClient())
+            PreapprovalResponse response;
+            try
             {
-                client.Headers.Add("Authorization", "Bearer " + WePayConfig.accessToken);
-                client.Headers.Add("Content-Type", "application/json");
-                client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.60 Safari/537.1");
-                var data = JsonConvert.SerializeObject(req);
-
-                string uriString = WePayConfig.endpoint(false) + req.actionUrl;
-                var response = client.UploadString(new Uri(uriString), data);
-                objResponse = JsonConvert.DeserializeObject<PreapprovalResponse>(response);
-
+                response = new WePayClient().Post<PreapprovalRequest, PreapprovalResponse>(req, req.actionUrl);
             }
-            return objResponse;
+            catch
+            {
+                response = new PreapprovalResponse { state = "error", amount = 0 };
+            }
 
+            return response;
         }
     }
 
@@ -55,7 +46,7 @@ namespace WePaySDK
         [JsonIgnore]
         public string actionUrl = @"preapproval/create";
 
-        public string account_id { get; set; }
+        public int account_id { get; set; }
         public string period { get; set; }
         public string short_description { get; set; }
         public decimal amount { get; set; }
@@ -71,7 +62,7 @@ namespace WePaySDK
 
     public class PreapprovalCreateResponse
     {
-        public string preapproval_id { get; set; }
+        public int preapproval_id { get; set; }
         public string preapproval_uri { get; set; }
     }
 
@@ -85,8 +76,8 @@ namespace WePaySDK
 
     public class PreapprovalResponse
     {
-        public string preapproval_id { get; set; }
-        public string account_id { get; set; }
+        public int preapproval_id { get; set; }
+        public int account_id { get; set; }
         public string state { get; set; }
         public string short_description { get; set; }
         public string type { get; set; }
