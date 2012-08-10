@@ -8,7 +8,7 @@ Getting Started
 
 Example Setup
 ------------
-* Open Web.Config and add your 'AccessToken' and 'AccountId' to the AppSettings config section.
+* Open Web.Config and add your 'AccessToken' , 'AccountId', 'ClientId' & 'Client Secret' to the AppSettings config section. Otherwise, the example won't work.
 
 
 Examples coverage
