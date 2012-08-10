@@ -8,13 +8,25 @@ Getting Started
 
 Example Setup
 ------------
-* Open Web.Config and add your 'AccessToken' , 'AccountId', 'ClientId' & 'Client Secret' to the AppSettings config section. Otherwise, the example won't work.
+Open Web.Config and add below values to the AppSettings section:
+* AccessToken
+* AccountId
+* ClientId
+* Client Secret
 
 
 Examples coverage
 ------------------------
 * Create a checkout
+* Create Preapproval
+* Process Preapproval
+* Get User Info - by accessToken
+* Get Checkout status
+* Authorize a User
 
-* Get the checkout status
 
-* more coming...
+TODO:
+-----------------------
+* Register a user example
+* better error handling
+* ??

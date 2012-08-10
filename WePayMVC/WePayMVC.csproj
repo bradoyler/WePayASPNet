@@ -75,6 +75,7 @@
     <Compile Include="lib\WePaySDK\OAuth.cs" />
     <Compile Include="lib\WePaySDK\User.cs" />
     <Compile Include="lib\WePaySDK\Preapproval.cs" />
+    <Compile Include="lib\WePaySDK\WePayClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
