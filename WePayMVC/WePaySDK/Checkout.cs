@@ -7,48 +7,47 @@ using System.Net;
 
 namespace WePaySDK
 {
-    public class Preapproval
-    {      
-        public string GetUri(PreapprovalCreateRequest req)
+    public class Checkout
+    {
+        public CheckoutCreateResponse Process(CheckoutCreateRequest req)
         {
-            PreapprovalCreateResponse response;
+            CheckoutCreateResponse response;
             try
             {
-                response = new WePayClient().Post<PreapprovalCreateRequest, PreapprovalCreateResponse>(req, req.actionUrl);
+                response = new WePayClient().Post<CheckoutCreateRequest, CheckoutCreateResponse>(req, req.actionUrl);
             }
-            catch
+            catch (WePayException ex) 
             {
-                response = new PreapprovalCreateResponse { preapproval_uri = "/error" };
-            }
-
-            return response.preapproval_uri;
-        }
-
-        public PreapprovalResponse GetStatus(int preapproval_id)
-        {
-            var req = new PreapprovalRequest { preapproval_id = preapproval_id };
-            PreapprovalResponse response;
-            try
-            {
-                response = new WePayClient().Post<PreapprovalRequest, PreapprovalResponse>(req, req.actionUrl);
-            }
-            catch
-            {
-                response = new PreapprovalResponse { state = "error", amount = 0 };
+                response = new CheckoutCreateResponse { checkout_id = 0, checkout_uri = "/error", Error =ex };
             }
 
             return response;
         }
+
+        public CheckoutResponse GetStatus(long checkout_id)
+        {
+            var req = new CheckoutRequest { checkout_id = checkout_id };
+            CheckoutResponse response;
+            try
+            {
+                response = new WePayClient().Post<CheckoutRequest, CheckoutResponse>(req, req.actionUrl);
+            }
+            catch (WePayException ex) 
+            {
+                response = new CheckoutResponse { state = ex.error, amount = 0, Error = ex };
+            }
+            return response;
+        }
     }
 
-    public class PreapprovalCreateRequest
+    public class CheckoutCreateRequest
     {
         [JsonIgnore]
-        public string actionUrl = @"preapproval/create";
+        public string actionUrl = @"checkout/create";
 
         public int account_id { get; set; }
-        public string period { get; set; }
         public string short_description { get; set; }
+        public string type { get; set; }
         public decimal amount { get; set; }
         public string mode { get; set; }
 
@@ -58,25 +57,29 @@ namespace WePaySDK
         public string redirect_uri { get; set; }
         public string payer_email_message { get; set; }
         public string payee_email_message { get; set; }
+        public int preapproval_id { get; set; }
     }
 
-    public class PreapprovalCreateResponse
+    public class CheckoutCreateResponse
     {
-        public int preapproval_id { get; set; }
-        public string preapproval_uri { get; set; }
-    }
-
-    public class PreapprovalRequest
-    {
-        public int preapproval_id { get; set; }
+        public int checkout_id { get; set; }
+        public string checkout_uri { get; set; }
 
         [JsonIgnore]
-        public string actionUrl = @"preapproval";
+        public WePayException Error { get; set; }
     }
 
-    public class PreapprovalResponse
+    public class CheckoutRequest
     {
-        public int preapproval_id { get; set; }
+        public long checkout_id { get; set; }
+
+        [JsonIgnore]
+        public string actionUrl = @"checkout";
+    }
+
+    public class CheckoutResponse
+    {
+        public int checkout_id { get; set; }
         public int account_id { get; set; }
         public string state { get; set; }
         public string short_description { get; set; }
@@ -101,6 +104,9 @@ namespace WePaySDK
         public string tax { get; set; }
         public decimal amount_refunded { get; set; }
         public string create_time { get; set; }
+
+        [JsonIgnore]
+        public WePayException Error { get; set; }
     }
 
 }

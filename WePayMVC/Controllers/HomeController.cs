@@ -24,14 +24,27 @@ namespace wepayASPNET.Controllers
 
         public ActionResult Checkout(int Id)
         {
-            var state = new Checkout().GetStatus(Id).state;
-            return Content(state);
+            var resp = new Checkout().GetStatus(Id);
+            if (resp.Error != null)
+            {
+                var msg = resp.Error.error + " - " + resp.Error.error_description;
+                return Content(msg);
+            }
+
+            return Content(resp.state);
         }
 
         public ActionResult GetUser(string Id)
         {
-            var user = new User().GetUser(Id);
-            return Content("Email:" + user.email + " State:" + user.state);
+            var resp = new User().GetUser(Id);
+            if (resp.Error != null)
+            {
+                ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
+                return View("Status");
+            }
+            ViewBag.state = resp.state;
+            ViewBag.Msg = "User " + resp.state+" - "+resp.email;
+            return View("Status");
         }
 
         public ActionResult CheckoutCreate(decimal amt)
@@ -48,8 +61,14 @@ namespace wepayASPNET.Controllers
                 redirect_uri = hostUrl + @"/Home/CheckoutStatus"
             };
 
-            var uri = new Checkout().Process(req).checkout_uri;
-            return Redirect(uri);
+            var resp = new Checkout().Process(req);
+            if (resp.Error != null)
+            {
+                ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
+                return View("Status");
+            }
+
+            return Redirect(resp.checkout_uri);
         }
 
         public ActionResult ProcessPreapproval(int preapproval_id, decimal amt)
@@ -67,8 +86,13 @@ namespace wepayASPNET.Controllers
                 preapproval_id = preapproval_id
             };
 
-            var result = new Checkout().Process(req);
-            return Redirect(hostUrl + @"/Home/CheckoutStatus?checkout_id=" + result.checkout_id);
+            var resp = new Checkout().Process(req);
+            if (resp.Error != null)
+            {
+                ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
+                return View("Status");
+            }
+            return Redirect(hostUrl + @"/Home/CheckoutStatus?checkout_id=" + resp.checkout_id);
         }
 
         public ActionResult PreapprovalCreate(decimal amt)
@@ -85,8 +109,13 @@ namespace wepayASPNET.Controllers
                 redirect_uri = hostUrl + @"/Home/PreapprovalStatus"
             };
 
-            var uri = new Preapproval().GetUri(req);
-            return Redirect(uri);
+            var resp = new Preapproval().GetUri(req);
+            if (resp.Error != null)
+            {
+                ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
+                return View("Status");
+            }
+            return Redirect(resp.preapproval_uri);
         }
 
         public ActionResult CheckoutStatus(string checkout_id)
@@ -101,7 +130,12 @@ namespace wepayASPNET.Controllers
             }
             ViewBag.checkout_id = iid;
             var resp = new WePaySDK.Checkout().GetStatus(iid);
-          
+            if (resp.Error != null)
+            {
+                ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
+                return View("Status");
+            }
+
             ViewBag.state = resp.state;
             ViewBag.amount = string.Format("{0:c}", resp.amount);
             ViewBag.Msg = "Checkout " + resp.state;
@@ -122,6 +156,12 @@ namespace wepayASPNET.Controllers
 
             ViewBag.checkout_id = iid;
             var resp = new WePaySDK.Preapproval().GetStatus(iid);
+            if (resp.Error != null)
+            {
+                ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
+                return View("Status");
+            }
+
             ViewBag.state = resp.state;
             ViewBag.amount = string.Format("{0:c}", resp.amount);
             ViewBag.Msg = "Preapproval Complete";
@@ -140,8 +180,14 @@ namespace wepayASPNET.Controllers
                 redirect_uri = hostUrl + @"/Home/OAuth"
             };
 
-            var response = new OAuth().Authorize(req);
-            ViewBag.Msg ="UserId:"+ response.user_id+" Token:"+response.access_token;//.Substring(0,7)+"...";
+            var resp = new OAuth().Authorize(req);
+            if (resp.Error != null)
+            {
+                ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
+                return View("Status");
+            }
+
+            ViewBag.Msg = "UserId:" + resp.user_id + " Token:" + resp.access_token;//.Substring(0,7)+"...";
             return View("Status");
         }
     }

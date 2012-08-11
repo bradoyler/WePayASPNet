@@ -16,9 +16,9 @@ namespace WePaySDK
             {
                 response = new WePayClient().Post<TokenRequest, TokenResponse>(req, req.actionUrl );
             }
-            catch
+            catch (WePayException ex)
             {
-                response = new TokenResponse { access_token = "error" };
+                response = new TokenResponse { access_token = "error", Error=ex };
             }
 
             return response;
@@ -41,5 +41,8 @@ namespace WePaySDK
         public int user_id { get; set; }
         public string access_token { get; set; }
         public string token_type { get; set; }
+
+        [JsonIgnore]
+        public WePayException Error { get; set; }
     }
 }

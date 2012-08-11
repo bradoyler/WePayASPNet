@@ -16,9 +16,9 @@ namespace WePaySDK
             {
                 response = new WePayClient().Post<UserRegisterRequest, UserRegisterResponse>(req, req.actionUrl);
             }
-            catch
+            catch (WePayException ex)
             {
-                response = new UserRegisterResponse { access_token = "error" };
+                response = new UserRegisterResponse { access_token = "error", Error=ex };
             }
 
             return response;
@@ -30,11 +30,11 @@ namespace WePaySDK
             UserResponse response;
             try
             {
-                response = new WePayClient().Post<UserRequest, UserResponse>(req, req.actionUrl, accessToken);
+                response = new WePayClient().Invoke<UserRequest, UserResponse>(req, req.actionUrl, accessToken);
             }
-            catch
+            catch (WePayException ex)
             {
-                response = new UserResponse { state = "error" };
+                response = new UserResponse { state = "error", Error=ex };
             }
 
             return response;
@@ -63,6 +63,9 @@ namespace WePaySDK
         public string access_token { get; set; }
         public string token_type { get; set; }
         public string expires_in { get; set; }
+
+        [JsonIgnore]
+        public WePayException Error { get; set; }
     }
 
     public class UserRequest
@@ -81,6 +84,9 @@ namespace WePaySDK
         public string last_name { get; set; }
         public string email { get; set; }
         public string state { get; set; }
+
+        [JsonIgnore]
+        public WePayException Error { get; set; }
     }
 
 }

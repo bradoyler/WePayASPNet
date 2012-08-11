@@ -7,56 +7,48 @@ using System.Net;
 
 namespace WePaySDK
 {
-    public class Checkout
+    public class Preapproval
     {
-        private WebClient client;
-      
-        public Checkout()
+        public PreapprovalCreateResponse GetUri(PreapprovalCreateRequest req)
         {
-            client = new WebClient();
-        }
-
-        public CheckoutCreateResponse Process(CheckoutCreateRequest req)
-        {
-            CheckoutCreateResponse response;
+            PreapprovalCreateResponse response;
             try
             {
-                response = new WePayClient().Post<CheckoutCreateRequest, CheckoutCreateResponse>(req, req.actionUrl);
+                response = new WePayClient().Post<PreapprovalCreateRequest, PreapprovalCreateResponse>(req, req.actionUrl);
             }
-            catch
+            catch(WePayException ex)
             {
-                response = new CheckoutCreateResponse { checkout_id=0, checkout_uri="/error" };
+                response = new PreapprovalCreateResponse { preapproval_uri = "/error", Error = ex };
             }
 
             return response;
         }
 
-        public CheckoutResponse GetStatus(long checkout_id)
+        public PreapprovalResponse GetStatus(int preapproval_id)
         {
-            var req = new CheckoutRequest { checkout_id = checkout_id };
-            CheckoutResponse response;
+            var req = new PreapprovalRequest { preapproval_id = preapproval_id };
+            PreapprovalResponse response;
             try
             {
-                response = new WePayClient().Post<CheckoutRequest, CheckoutResponse>(req, req.actionUrl);
+                response = new WePayClient().Post<PreapprovalRequest, PreapprovalResponse>(req, req.actionUrl);
             }
-            catch
+            catch (WePayException ex)
             {
-                response = new CheckoutResponse { state = "error", amount = 0 };
+                response = new PreapprovalResponse { state = "error", amount = 0, Error = ex };
             }
 
             return response;
         }
-       
     }
 
-    public class CheckoutCreateRequest
+    public class PreapprovalCreateRequest
     {
         [JsonIgnore]
-        public string actionUrl = @"checkout/create";
+        public string actionUrl = @"preapproval/create";
 
         public int account_id { get; set; }
+        public string period { get; set; }
         public string short_description { get; set; }
-        public string type { get; set; }
         public decimal amount { get; set; }
         public string mode { get; set; }
 
@@ -66,26 +58,29 @@ namespace WePaySDK
         public string redirect_uri { get; set; }
         public string payer_email_message { get; set; }
         public string payee_email_message { get; set; }
+    }
+
+    public class PreapprovalCreateResponse
+    {
         public int preapproval_id { get; set; }
-    }
-
-    public class CheckoutCreateResponse
-    {
-        public int checkout_id { get; set; }
-        public string checkout_uri { get; set; }
-    }
-
-    public class CheckoutRequest
-    {
-        public long checkout_id { get; set; }
+        public string preapproval_uri { get; set; }
 
         [JsonIgnore]
-        public string actionUrl = @"checkout";
+        public WePayException Error { get; set; }
+      
     }
 
-    public class CheckoutResponse
+    public class PreapprovalRequest
     {
-        public int checkout_id { get; set; }
+        public int preapproval_id { get; set; }
+
+        [JsonIgnore]
+        public string actionUrl = @"preapproval";
+    }
+
+    public class PreapprovalResponse
+    {
+        public int preapproval_id { get; set; }
         public int account_id { get; set; }
         public string state { get; set; }
         public string short_description { get; set; }
@@ -110,6 +105,10 @@ namespace WePaySDK
         public string tax { get; set; }
         public decimal amount_refunded { get; set; }
         public string create_time { get; set; }
+
+        [JsonIgnore]
+        public WePayException Error { get; set; }
+       
     }
 
 }
