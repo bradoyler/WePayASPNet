@@ -66,12 +66,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="WePaySDK\Checkout.cs" />
-    <Compile Include="WePaySDK\Config.cs" />
-    <Compile Include="WePaySDK\OAuth.cs" />
-    <Compile Include="WePaySDK\User.cs" />
-    <Compile Include="WePaySDK\Preapproval.cs" />
-    <Compile Include="WePaySDK\WePayClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -107,7 +101,12 @@
   <ItemGroup>
     <Content Include="Views\Home\Status.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\WePaySDK\WePaySDK.csproj">
+      <Project>{88459858-7BD4-495A-95BC-4C29CB352A85}</Project>
+      <Name>WePaySDK</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

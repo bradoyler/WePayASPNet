@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using WePaySDK;
+using System.Configuration;
 
 namespace WePayMVC
 {
@@ -35,6 +37,11 @@ namespace WePayMVC
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            WePayConfig.accessToken = ConfigurationManager.AppSettings["WepayAccessToken"];
+            WePayConfig.accountId = Convert.ToInt32(ConfigurationManager.AppSettings["WepayAccountId"]);
+            WePayConfig.clientId = Convert.ToInt32(ConfigurationManager.AppSettings["WepayClientId"]);
+            WePayConfig.clientSecret = ConfigurationManager.AppSettings["WepayClientSecret"];
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Net;
 using System.IO;
 using System.Text;
+using System.Configuration;
 using WePaySDK;
 
 namespace wepayASPNET.Controllers

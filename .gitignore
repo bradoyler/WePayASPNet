@@ -1,4 +1,6 @@
 
 *.suo
-/WePayMVC/bin
-/WePayMVC/obj
+/WePayExamplesMVC/bin
+/WePayExamplesMVC/obj
+/WePaySDK/bin
+/WePaySDK/obj

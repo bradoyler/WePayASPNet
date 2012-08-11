@@ -11,12 +11,12 @@ namespace WePaySDK
     public static class WePayConfig
     {
         // staging credentials...
-        public static string accessToken = ConfigurationManager.AppSettings["WepayAccessToken"];
-        public static int accountId = Convert.ToInt32(ConfigurationManager.AppSettings["WepayAccountId"]);
-        public static int clientId = Convert.ToInt32(ConfigurationManager.AppSettings["WepayClientId"]);
-        public static string clientSecret = ConfigurationManager.AppSettings["WepayClientSecret"];
+        public static string accessToken = "zzz";
+        public static int accountId = 123;
+        public static int clientId = 123;
+        public static string clientSecret ="zzz";
         public static string authScope = "manage_accounts,view_balance,collect_payments,refund_payments,view_user,preapprove_payments,send_money";
-        public static bool ProductionMode = Convert.ToBoolean(ConfigurationManager.AppSettings["ProductionMode"]);
+        public static bool ProductionMode = false;
         public static string endpoint(bool prod)
         {
             if(prod) return @"https://www.wepayapi.com/v2/";
