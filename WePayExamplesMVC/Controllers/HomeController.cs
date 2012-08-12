@@ -13,6 +13,11 @@ namespace wepayASPNET.Controllers
 {
     public class HomeController : Controller
     {
+        protected override void OnActionExecuting(ActionExecutingContext ctx)
+        {
+            base.OnActionExecuting(ctx);
+            GlobalVars.hostUrl =Request.Url.Scheme + "://" + Request.Url.Authority;
+        }
        
         public ActionResult Index()
         {
