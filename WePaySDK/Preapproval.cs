@@ -9,32 +9,32 @@ namespace WePaySDK
 {
     public class Preapproval
     {
-        public PreapprovalCreateResponse GetUri(PreapprovalCreateRequest req)
+        public PreapprovalCreateResponse Post(PreapprovalCreateRequest req)
         {
             PreapprovalCreateResponse response;
             try
             {
-                response = new WePayClient().Post<PreapprovalCreateRequest, PreapprovalCreateResponse>(req, req.actionUrl);
+                response = new WePayClient().Invoke<PreapprovalCreateRequest, PreapprovalCreateResponse>(req, req.actionUrl, req.accessToken);
             }
             catch(WePayException ex)
             {
-                response = new PreapprovalCreateResponse { preapproval_uri = "/error", Error = ex };
+                response = new PreapprovalCreateResponse { preapproval_uri = req.redirect_uri+"?error="+ex.error, Error = ex };
             }
 
             return response;
         }
 
-        public PreapprovalResponse GetStatus(int preapproval_id)
+        public PreapprovalResponse GetStatus(long preapproval_id)
         {
             var req = new PreapprovalRequest { preapproval_id = preapproval_id };
             PreapprovalResponse response;
             try
             {
-                response = new WePayClient().Post<PreapprovalRequest, PreapprovalResponse>(req, req.actionUrl);
+                response = new WePayClient().Invoke<PreapprovalRequest, PreapprovalResponse>(req, req.actionUrl);
             }
             catch (WePayException ex)
             {
-                response = new PreapprovalResponse { state = "error", amount = 0, Error = ex };
+                response = new PreapprovalResponse { state = ex.error, amount = 0, Error = ex };
             }
 
             return response;
@@ -45,8 +45,10 @@ namespace WePaySDK
     {
         [JsonIgnore]
         public string actionUrl = @"preapproval/create";
+        [JsonIgnore]
+        public string accessToken { get; set; }
 
-        public int account_id { get; set; }
+        public long account_id { get; set; }
         public string period { get; set; }
         public string short_description { get; set; }
         public decimal amount { get; set; }
@@ -62,7 +64,7 @@ namespace WePaySDK
 
     public class PreapprovalCreateResponse
     {
-        public int preapproval_id { get; set; }
+        public long preapproval_id { get; set; }
         public string preapproval_uri { get; set; }
 
         [JsonIgnore]
@@ -72,7 +74,7 @@ namespace WePaySDK
 
     public class PreapprovalRequest
     {
-        public int preapproval_id { get; set; }
+        public long preapproval_id { get; set; }
 
         [JsonIgnore]
         public string actionUrl = @"preapproval";
@@ -80,8 +82,8 @@ namespace WePaySDK
 
     public class PreapprovalResponse
     {
-        public int preapproval_id { get; set; }
-        public int account_id { get; set; }
+        public long preapproval_id { get; set; }
+        public long account_id { get; set; }
         public string state { get; set; }
         public string short_description { get; set; }
         public string type { get; set; }

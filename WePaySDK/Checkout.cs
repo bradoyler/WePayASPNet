@@ -9,16 +9,16 @@ namespace WePaySDK
 {
     public class Checkout
     {
-        public CheckoutCreateResponse Process(CheckoutCreateRequest req)
+        public CheckoutCreateResponse Create(CheckoutCreateRequest req)
         {
             CheckoutCreateResponse response;
             try
             {
-                response = new WePayClient().Post<CheckoutCreateRequest, CheckoutCreateResponse>(req, req.actionUrl);
+                response = new WePayClient().Invoke<CheckoutCreateRequest, CheckoutCreateResponse>(req, req.actionUrl,req.accessToken);
             }
             catch (WePayException ex) 
             {
-                response = new CheckoutCreateResponse { checkout_id = 0, checkout_uri = "/error", Error =ex };
+                response = new CheckoutCreateResponse { checkout_id = 0, checkout_uri =req.redirect_uri+"?error="+ex.error, Error =ex };
             }
 
             return response;
@@ -30,7 +30,7 @@ namespace WePaySDK
             CheckoutResponse response;
             try
             {
-                response = new WePayClient().Post<CheckoutRequest, CheckoutResponse>(req, req.actionUrl);
+                response = new WePayClient().Invoke<CheckoutRequest, CheckoutResponse>(req, req.actionUrl);
             }
             catch (WePayException ex) 
             {
@@ -45,7 +45,9 @@ namespace WePaySDK
         [JsonIgnore]
         public string actionUrl = @"checkout/create";
 
-        public int account_id { get; set; }
+        [JsonIgnore]
+        public string accessToken { get; set; }
+        public long account_id { get; set; }
         public string short_description { get; set; }
         public string type { get; set; }
         public decimal amount { get; set; }
@@ -57,12 +59,12 @@ namespace WePaySDK
         public string redirect_uri { get; set; }
         public string payer_email_message { get; set; }
         public string payee_email_message { get; set; }
-        public int preapproval_id { get; set; }
+        public long preapproval_id { get; set; }
     }
 
     public class CheckoutCreateResponse
     {
-        public int checkout_id { get; set; }
+        public long checkout_id { get; set; }
         public string checkout_uri { get; set; }
 
         [JsonIgnore]
@@ -79,8 +81,8 @@ namespace WePaySDK
 
     public class CheckoutResponse
     {
-        public int checkout_id { get; set; }
-        public int account_id { get; set; }
+        public long checkout_id { get; set; }
+        public long account_id { get; set; }
         public string state { get; set; }
         public string short_description { get; set; }
         public string type { get; set; }

@@ -14,7 +14,7 @@ namespace WePaySDK
             UserRegisterResponse response;
             try
             {
-                response = new WePayClient().Post<UserRegisterRequest, UserRegisterResponse>(req, req.actionUrl);
+                response = new WePayClient().Invoke<UserRegisterRequest, UserRegisterResponse>(req, req.actionUrl);
             }
             catch (WePayException ex)
             {

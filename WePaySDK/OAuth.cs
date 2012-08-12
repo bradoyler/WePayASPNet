@@ -14,7 +14,7 @@ namespace WePaySDK
             TokenResponse response;
             try
             {
-                response = new WePayClient().Post<TokenRequest, TokenResponse>(req, req.actionUrl );
+                response = new WePayClient().Invoke<TokenRequest, TokenResponse>(req, req.actionUrl);
             }
             catch (WePayException ex)
             {

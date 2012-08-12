@@ -13,13 +13,16 @@ namespace wepayASPNET.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
+        private string hostUrl;
+        protected override void OnActionExecuting(ActionExecutingContext ctx)
         {
+            base.OnActionExecuting(ctx);
+            hostUrl= this.HttpContext.Request.Url.Scheme + "://" + this.ControllerContext.HttpContext.Request.Url.Authority;
         }
-
+       
         public ActionResult Index()
         {
-            ViewBag.redirect_uri = this.HttpContext.Request.Url.Scheme + "://" + this.ControllerContext.HttpContext.Request.Url.Authority+ "/Home/OAuth";
+            ViewBag.redirect_uri = hostUrl + "/Home/OAuth";
             return View();
         }
 
@@ -50,8 +53,7 @@ namespace wepayASPNET.Controllers
 
         public ActionResult CheckoutCreate(decimal amt)
         {
-            var hostUrl = this.HttpContext.Request.Url.Scheme + "://" + this.ControllerContext.HttpContext.Request.Url.Authority;
-
+          
             var req = new CheckoutCreateRequest
             {
                 account_id = WePayConfig.accountId,
@@ -62,7 +64,7 @@ namespace wepayASPNET.Controllers
                 redirect_uri = hostUrl + @"/Home/CheckoutStatus"
             };
 
-            var resp = new Checkout().Process(req);
+            var resp = new Checkout().Create(req);
             if (resp.Error != null)
             {
                 ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
@@ -74,8 +76,6 @@ namespace wepayASPNET.Controllers
 
         public ActionResult ProcessPreapproval(int preapproval_id, decimal amt)
         {
-            var hostUrl = this.HttpContext.Request.Url.Scheme + "://" + this.ControllerContext.HttpContext.Request.Url.Authority;
-
             var req = new CheckoutCreateRequest
             {
                 account_id = WePayConfig.accountId,
@@ -87,7 +87,7 @@ namespace wepayASPNET.Controllers
                 preapproval_id = preapproval_id
             };
 
-            var resp = new Checkout().Process(req);
+            var resp = new Checkout().Create(req);
             if (resp.Error != null)
             {
                 ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
@@ -98,8 +98,6 @@ namespace wepayASPNET.Controllers
 
         public ActionResult PreapprovalCreate(decimal amt)
         {
-            var hostUrl = this.HttpContext.Request.Url.Scheme + "://" + this.ControllerContext.HttpContext.Request.Url.Authority;
-
             var req = new PreapprovalCreateRequest
             {
                 account_id = WePayConfig.accountId,
@@ -110,7 +108,7 @@ namespace wepayASPNET.Controllers
                 redirect_uri = hostUrl + @"/Home/PreapprovalStatus"
             };
 
-            var resp = new Preapproval().GetUri(req);
+            var resp = new Preapproval().Post(req);
             if (resp.Error != null)
             {
                 ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
@@ -171,8 +169,6 @@ namespace wepayASPNET.Controllers
 
         public ActionResult OAuth(string code)
         {
-            var hostUrl = this.HttpContext.Request.Url.Scheme + "://" + this.ControllerContext.HttpContext.Request.Url.Authority;
-
             var req = new TokenRequest
             {
                 client_id = WePayConfig.clientId,

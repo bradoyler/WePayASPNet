@@ -47,7 +47,7 @@ namespace WePaySDK
             return JsonConvert.DeserializeObject<ResponseT>(json);
         }
 
-        public ResponseT Post<RequestT, ResponseT>(RequestT request, string actionUrl)
+        public ResponseT Invoke<RequestT, ResponseT>(RequestT request, string actionUrl)
         {
             return Invoke<RequestT, ResponseT>(request, actionUrl, WePayConfig.accessToken);
         }
