@@ -13,16 +13,10 @@ namespace wepayASPNET.Controllers
 {
     public class HomeController : Controller
     {
-        private string hostUrl;
-        protected override void OnActionExecuting(ActionExecutingContext ctx)
-        {
-            base.OnActionExecuting(ctx);
-            hostUrl= this.HttpContext.Request.Url.Scheme + "://" + this.ControllerContext.HttpContext.Request.Url.Authority;
-        }
        
         public ActionResult Index()
         {
-            ViewBag.redirect_uri = hostUrl + "/Home/OAuth";
+            ViewBag.redirect_uri = GlobalVars.hostUrl + "/Home/OAuth";
             return View();
         }
 
@@ -61,7 +55,7 @@ namespace wepayASPNET.Controllers
                 type = "SERVICE",
                 amount = amt,
                 short_description = "checkout test",
-                redirect_uri = hostUrl + @"/Home/CheckoutStatus"
+                redirect_uri = GlobalVars.hostUrl + @"/Home/CheckoutStatus"
             };
 
             var resp = new Checkout().Create(req);
@@ -83,7 +77,7 @@ namespace wepayASPNET.Controllers
                 type = "SERVICE",
                 amount = amt,
                 short_description = "checkout test",
-                redirect_uri = hostUrl + @"/Home/CheckoutStatus",
+                redirect_uri = GlobalVars.hostUrl + @"/Home/CheckoutStatus",
                 preapproval_id = preapproval_id
             };
 
@@ -93,7 +87,7 @@ namespace wepayASPNET.Controllers
                 ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
                 return View("Status");
             }
-            return Redirect(hostUrl + @"/Home/CheckoutStatus?checkout_id=" + resp.checkout_id);
+            return Redirect(GlobalVars.hostUrl + @"/Home/CheckoutStatus?checkout_id=" + resp.checkout_id);
         }
 
         public ActionResult PreapprovalCreate(decimal amt)
@@ -105,7 +99,7 @@ namespace wepayASPNET.Controllers
                 amount = amt,
                 period = "once",
                 short_description = "test pre-approval",
-                redirect_uri = hostUrl + @"/Home/PreapprovalStatus"
+                redirect_uri = GlobalVars.hostUrl + @"/Home/PreapprovalStatus"
             };
 
             var resp = new Preapproval().Post(req);
@@ -174,7 +168,7 @@ namespace wepayASPNET.Controllers
                 client_id = WePayConfig.clientId,
                 client_secret = WePayConfig.clientSecret,
                 code = code,
-                redirect_uri = hostUrl + @"/Home/OAuth"
+                redirect_uri = GlobalVars.hostUrl + @"/Home/OAuth"
             };
 
             var resp = new OAuth().Authorize(req);

@@ -7,13 +7,19 @@ using System.Web.Routing;
 using WePaySDK;
 using System.Configuration;
 
-namespace WePayMVC
+namespace wepayASPNET
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
+    public static class GlobalVars
+    {
+        // i know...this is lazy
+        public static string hostUrl;
+    }
 
     public class MvcApplication : System.Web.HttpApplication
     {
+       
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
@@ -38,10 +44,14 @@ namespace WePayMVC
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
+            GlobalVars.hostUrl = this.Context.Request.Url.Scheme + "://" + this.Context.Request.Url.Authority;
+
             WePayConfig.accessToken = ConfigurationManager.AppSettings["WepayAccessToken"];
             WePayConfig.accountId = Convert.ToInt32(ConfigurationManager.AppSettings["WepayAccountId"]);
             WePayConfig.clientId = Convert.ToInt32(ConfigurationManager.AppSettings["WepayClientId"]);
             WePayConfig.clientSecret = ConfigurationManager.AppSettings["WepayClientSecret"];
+            WePayConfig.productionMode = Convert.ToBoolean(ConfigurationManager.AppSettings["ProductionMode"]);
+
         }
     }
 }
