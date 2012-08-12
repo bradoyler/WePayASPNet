@@ -44,7 +44,7 @@ namespace wepayASPNET
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            GlobalVars.hostUrl = this.Context.Request.Url.Scheme + "://" + this.Context.Request.Url.Authority;
+          //  GlobalVars.hostUrl = this.Context.Request.Url.Scheme + "://" + this.Context.Request.Url.Authority;
 
             WePayConfig.accessToken = ConfigurationManager.AppSettings["WepayAccessToken"];
             WePayConfig.accountId = Convert.ToInt32(ConfigurationManager.AppSettings["WepayAccountId"]);
