@@ -56,7 +56,7 @@ namespace wepayASPNET.Controllers
             var req = new CheckoutCreateRequest
             {
                 account_id = WePayConfig.accountId,
-                mode = "regular",
+                mode = "regular", accessToken=WePayConfig.accessToken,
                 type = "SERVICE",
                 amount = amt,
                 short_description = "checkout test",
@@ -77,7 +77,7 @@ namespace wepayASPNET.Controllers
         {
             var req = new CheckoutCreateRequest
             {
-                account_id = WePayConfig.accountId,
+                account_id = WePayConfig.accountId, accessToken=WePayConfig.accessToken,
                 mode = "regular",
                 type = "SERVICE",
                 amount = amt,
@@ -99,7 +99,7 @@ namespace wepayASPNET.Controllers
         {
             var req = new PreapprovalCreateRequest
             {
-                account_id = WePayConfig.accountId,
+                account_id = WePayConfig.accountId, accessToken=WePayConfig.accessToken,
                 mode = "regular",
                 amount = amt,
                 period = "once",
