@@ -9,7 +9,7 @@ namespace WePaySDK
 {
     public class Checkout
     {
-        public CheckoutCreateResponse Create(CheckoutCreateRequest req)
+        public CheckoutCreateResponse Post(CheckoutCreateRequest req)
         {
             CheckoutCreateResponse response;
             try
@@ -43,7 +43,7 @@ namespace WePaySDK
     public class CheckoutCreateRequest
     {
         [JsonIgnore]
-        public string actionUrl = @"checkout/create";
+        public readonly string actionUrl = @"checkout/create";
 
         [JsonIgnore]
         public string accessToken { get; set; }
@@ -76,7 +76,7 @@ namespace WePaySDK
         public long checkout_id { get; set; }
 
         [JsonIgnore]
-        public string actionUrl = @"checkout";
+        public readonly string actionUrl = @"checkout";
     }
 
     public class CheckoutResponse

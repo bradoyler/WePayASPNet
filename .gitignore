@@ -1,6 +1,8 @@
 
 *.suo
 /WePayExamplesMVC/bin
+/WePayExamplesMVC/Web.config
 /WePayExamplesMVC/obj
 /WePaySDK/bin
 /WePaySDK/obj
+/
