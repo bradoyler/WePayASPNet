@@ -63,7 +63,7 @@ namespace wepayASPNET.Controllers
                 redirect_uri = GlobalVars.hostUrl + @"/Home/CheckoutStatus"
             };
 
-            var resp = new Checkout().Create(req);
+            var resp = new Checkout().Post(req);
             if (resp.Error != null)
             {
                 ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
@@ -86,7 +86,7 @@ namespace wepayASPNET.Controllers
                 preapproval_id = preapproval_id
             };
 
-            var resp = new Checkout().Create(req);
+            var resp = new Checkout().Post(req);
             if (resp.Error != null)
             {
                 ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
@@ -153,7 +153,8 @@ namespace wepayASPNET.Controllers
             }
 
             ViewBag.checkout_id = iid;
-            var resp = new WePaySDK.Preapproval().GetStatus(iid);
+            var req = new PreapprovalRequest { accessToken = WePayConfig.accessToken, preapproval_id = iid };
+            var resp = new WePaySDK.Preapproval().GetStatus(req);
             if (resp.Error != null)
             {
                 ViewBag.Error = resp.Error.error + " - " + resp.Error.error_description;
@@ -183,7 +184,12 @@ namespace wepayASPNET.Controllers
                 return View("Status");
             }
 
+            var randomNum= new Random(1).Next(99999);
+            var accRequest = new AccountCreateRequest { accessToken = resp.access_token, name = "testSDK " + randomNum, description = "test account for SDK demo", reference_id = "test" + randomNum };
+            var accResponse = new Account().Post(accRequest);
+
             ViewBag.Msg = "UserId:" + resp.user_id + " Token:" + resp.access_token;//.Substring(0,7)+"...";
+            ViewBag.Msg +="New Account#:"+ accResponse.account_id;
             return View("Status");
         }
     }

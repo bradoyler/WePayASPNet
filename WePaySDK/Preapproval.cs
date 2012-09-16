@@ -24,9 +24,9 @@ namespace WePaySDK
             return response;
         }
 
-        public PreapprovalResponse GetStatus(long preapproval_id)
+        public PreapprovalResponse GetStatus(PreapprovalRequest req)
         {
-            var req = new PreapprovalRequest { preapproval_id = preapproval_id };
+           // var req = new PreapprovalRequest { preapproval_id = preapproval_id };
             PreapprovalResponse response;
             try
             {
@@ -36,7 +36,6 @@ namespace WePaySDK
             {
                 response = new PreapprovalResponse { state = ex.error, amount = 0, Error = ex };
             }
-
             return response;
         }
     }
@@ -74,10 +73,12 @@ namespace WePaySDK
 
     public class PreapprovalRequest
     {
-        public long preapproval_id { get; set; }
-
+        [JsonIgnore]
+        public string accessToken { get; set; }
         [JsonIgnore]
         public string actionUrl = @"preapproval";
+
+        public long preapproval_id { get; set; }
     }
 
     public class PreapprovalResponse
