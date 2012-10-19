@@ -52,7 +52,8 @@ namespace WePaySDK
         public string type { get; set; }
         public decimal amount { get; set; }
         public string mode { get; set; }
-
+        public string fee_payer { get; set; }
+        public decimal app_fee { get; set; } 
         public string reference_id { get; set; }
         public string long_description { get; set; }
         public string callback_uri { get; set; }
