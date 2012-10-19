@@ -16,7 +16,7 @@ namespace WePaySDK
             WebClient client = new WebClient();
             client.Headers.Add("Authorization", "Bearer " + accessToken);
             client.Headers.Add("Content-Type", "application/json");
-            client.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.60 Safari/537.1");
+            client.Headers.Add("User-Agent", "WePay API C# SDK");
             var data = JsonConvert.SerializeObject(request);
             string uriString = WePayConfig.endpoint(WePayConfig.productionMode) + actionUrl;
             var json = "";
