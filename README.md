@@ -1,4 +1,4 @@
-Getting Started
+:sparkles: Getting Started :sparkles:
 ============
 * Read the API docs @ (https://stage.wepay.com/developer)
 
