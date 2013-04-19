@@ -19,7 +19,7 @@ namespace WePaySDK
         public static string authScope = "manage_accounts,view_balance,collect_payments,refund_payments,view_user,preapprove_payments,send_money";
         public static string endpoint(bool prod)
         {
-            if(prod) return @"https://www.wepayapi.com/v2/";
+            if(prod) return @"https://wepayapi.com/v2/";
             return @"https://stage.wepayapi.com/v2/";
         }
     }
