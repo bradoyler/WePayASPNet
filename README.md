@@ -29,3 +29,6 @@ TODO:
 -----------------------
 * Register a user example
 * ??
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/bradoyler/wepayaspnet/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
